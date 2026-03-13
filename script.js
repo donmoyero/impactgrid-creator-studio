@@ -4,9 +4,9 @@
 // ─────────────────────────────────────────────
 
 // ⚠ PASTE YOUR GEMINI API KEY HERE
-const GEMINI_API_KEY = 'AIzaSyAOIfQWAqCQ-A2cEqsEFI1OFLACRo92sLk';
+const GEMINI_API_KEY = 'AIzaSyAUtjbI7i0n5jJOXkbOQGcz7JhPkaa2Qkk';
 
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
 let activePlat  = 'ig';
 let activeCtype = 'ad';

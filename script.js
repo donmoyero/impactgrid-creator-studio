@@ -1,4 +1,8 @@
-function generate(){
+function generate(document.getElementById("output").innerHTML = `
+<h2>${agent}</h2>
+<p>Topic: ${topic}</p>
+<p>${agent} is now creating content about ${topic}.</p>
+`;){
 
 let topic = document.getElementById("topic").value;
 

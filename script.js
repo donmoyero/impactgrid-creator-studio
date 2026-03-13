@@ -50,6 +50,10 @@ else{
 avatar.src = "https://cdn-icons-png.flaticon.com/512/4140/4140048.png";
 }
 
+
+// MAKE DIJO SPEAK
+speakText(speech);
+
 }
 
 
@@ -92,12 +96,31 @@ return "Content Studio";
 function generateSpeech(agent, topic){
 
 if(agent === "DIJO Coach"){
-return "Today we are talking about " + topic + ". If you want results, you need discipline, consistency, and the right mindset. Start small, stay focused, and keep pushing.";
+return "Today we are talking about " + topic + ". If you want results, you need discipline, consistency, and the right mindset. Stay focused and keep pushing.";
 }
 
 if(agent === "DIJO Analyst"){
-return "Let's analyze " + topic + ". Understanding the numbers, trends, and strategy behind this topic can help you make smarter decisions and grow faster.";
+return "Let's analyze " + topic + ". Understanding the numbers and strategies behind this topic can help you make smarter business decisions.";
 }
 
-return "Today we’re exploring " + topic + ". Creating great content starts with understanding your audience and delivering value consistently.";
+return "Today we are exploring " + topic + ". Creating powerful content starts with understanding your audience and delivering value.";
+}
+
+
+
+// VOICE ENGINE
+function speakText(text){
+
+let speech = new SpeechSynthesisUtterance();
+
+speech.text = text;
+
+speech.rate = 1;
+
+speech.pitch = 1;
+
+speech.volume = 1;
+
+window.speechSynthesis.speak(speech);
+
 }

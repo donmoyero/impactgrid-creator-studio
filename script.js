@@ -1,19 +1,16 @@
-function generate(document.getElementById("output").innerHTML = `
-<h2>${agent}</h2>
-<p>Topic: ${topic}</p>
-<p>${agent} is now creating content about ${topic}.</p>
-`;){
+function generate(){
 
 let topic = document.getElementById("topic").value;
 
 // choose DIJO agent
 let agent = chooseAgent(topic);
 
-// generate script
-let script = agent + " is explaining " + topic + ".";
-
 // show result
-document.getElementById("output").innerHTML = script;
+document.getElementById("output").innerHTML = `
+<h2>${agent}</h2>
+<p>Topic: ${topic}</p>
+<p>${agent} is now creating content about ${topic}.</p>
+`;
 
 }
 

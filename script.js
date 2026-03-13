@@ -1,14 +1,24 @@
 async function generate(){
 
-let topic = document.getElementById("topic").value.toLowerCase();
+let topicInput = document.getElementById("topic");
+
+if(!topicInput.value){
+alert("Please enter a topic first.");
+return;
+}
+
+let topic = topicInput.value.toLowerCase();
 
 let agent = chooseAgent(topic);
 
 let room = chooseRoom(agent);
 
 
-// CALL AI SERVER
-let speech = "Generating AI script...";
+// SHOW LOADING
+let output = document.getElementById("output");
+output.innerHTML = "<p>DIJO is creating advertising content...</p>";
+
+let speech = "";
 
 try{
 
@@ -26,6 +36,10 @@ agent: agent
 })
 
 });
+
+if(!response.ok){
+throw new Error("Server error: " + response.status);
+}
 
 let data = await response.json();
 
@@ -49,8 +63,6 @@ let timeline = [
 
 
 // OUTPUT PANEL
-let output = document.getElementById("output");
-
 output.innerHTML =
 "<h2>" + agent + "</h2>" +
 "<p><b>Location:</b> " + room + "</p>" +
@@ -139,14 +151,13 @@ return "Content Studio";
 // VOICE ENGINE
 function speakText(text){
 
-let speech = new SpeechSynthesisUtterance();
-
-speech.text = text;
+let speech = new SpeechSynthesisUtterance(text);
 
 speech.rate = 1;
 speech.pitch = 1;
 speech.volume = 1;
 
+window.speechSynthesis.cancel();
 window.speechSynthesis.speak(speech);
 
 }

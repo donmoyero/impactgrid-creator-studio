@@ -31,24 +31,6 @@ roomBox.style.backgroundImage = "url('https://images.unsplash.com/photo-14927244
 
 }
 
-let topic = document.getElementById("topic").value;
-
-// choose DIJO agent
-let agent = chooseAgent(topic);
-
-// choose room
-let room = chooseRoom(agent);
-
-// show result
-document.getElementById("output").innerHTML = `
-<h2>${agent}</h2>
-<p><b>Location:</b> ${room}</p>
-<p><b>Topic:</b> ${topic}</p>
-<p>${agent} is now creating content about ${topic}.</p>
-`;
-
-}
-
 function chooseAgent(topic){
 
 if(topic.includes("gym") || topic.includes("fitness")){

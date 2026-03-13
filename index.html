@@ -228,7 +228,7 @@ footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;}
   <div class="studio-wrap">
     <!-- Server config bar -->
     <div class="config-bar">
-      ⚡ Connected to your server at <code id="server-url-display">your-render-url.onrender.com</code>
+      ⚡ Connected to your server at <code id="server-url-display">dijo-ai.onrender.com</code>
       — <a href="#" onclick="promptServerUrl()" style="color:var(--amber)">change</a>
     </div>
 
@@ -375,7 +375,7 @@ footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;}
 <script>
 // ── CONFIG ──
 // IMPORTANT: Replace with your actual Render server URL
-let SERVER_URL = localStorage.getItem('dijo_server') || 'https://YOUR-RENDER-URL.onrender.com';
+let SERVER_URL = localStorage.getItem('dijo_server') || 'https://dijo-ai.onrender.com';
 document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://','');
 
 function promptServerUrl() {

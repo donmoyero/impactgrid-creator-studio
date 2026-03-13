@@ -1,6 +1,6 @@
 function generate(){
 
-let topic = document.getElementById("topic").value;
+let topic = document.getElementById("topic").value.toLowerCase();
 
 let agent = chooseAgent(topic);
 

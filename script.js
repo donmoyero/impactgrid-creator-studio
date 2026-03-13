@@ -1,26 +1,33 @@
 function generate(){
 
-// get topic
 let topic = document.getElementById("topic").value.toLowerCase();
 
-// pick agent
 let agent = chooseAgent(topic);
 
-// pick room
 let room = chooseRoom(agent);
 
-// generate talking script
 let speech = generateSpeech(agent, topic);
 
-// show output
+
+// SCENE TIMELINE
+let timeline = [
+"Intro",
+"B-Roll",
+"Explanation"
+];
+
+
+// OUTPUT PANEL
 let output = document.getElementById("output");
 
 output.innerHTML =
 "<h2>" + agent + "</h2>" +
 "<p><b>Location:</b> " + room + "</p>" +
 "<p><b>Topic:</b> " + topic + "</p>" +
+"<p><b>Scene Timeline:</b> " + timeline.join(" → ") + "</p>" +
 "<p><b>DIJO says:</b></p>" +
-"<p>" + speech + "</p>";
+"<p class='caption'>" + speech + "</p>" +
+"<br><button onclick='exportVideo()'>Export Video</button>";
 
 
 // ROOM BACKGROUND
@@ -51,11 +58,15 @@ avatar.src = "https://cdn-icons-png.flaticon.com/512/4140/4140048.png";
 }
 
 
-// B-ROLL TRIGGER
+// BROLL TRIGGER
 showBroll(topic);
 
 
-// MAKE DIJO SPEAK
+// CAPTIONS
+generateCaptions(speech);
+
+
+// VOICE
 speakText(speech);
 
 }
@@ -147,5 +158,28 @@ roomBox.style.backgroundImage = "url(https://images.unsplash.com/photo-146092589
 if(topic.includes("content")){
 roomBox.style.backgroundImage = "url(https://images.unsplash.com/photo-1522202176988-66273c2fd55f)";
 }
+
+}
+
+
+
+// CAPTION GENERATOR
+function generateCaptions(text){
+
+let caption = document.querySelector(".caption");
+
+caption.style.fontSize = "18px";
+caption.style.background = "rgba(0,0,0,0.6)";
+caption.style.padding = "10px";
+caption.style.borderRadius = "6px";
+
+}
+
+
+
+// EXPORT VIDEO (basic placeholder)
+function exportVideo(){
+
+alert("Video export feature coming next. This will render the DIJO scene as a downloadable video.");
 
 }

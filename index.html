@@ -2,13 +2,65 @@
 <html>
 
 <head>
+
 <title>ImpactGrid Creator Studio</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+#studio{
+margin-top:40px;
+}
+
+#room{
+width:600px;
+height:320px;
+margin:auto;
+background:#333;
+border-radius:10px;
+margin-bottom:20px;
+background-size:cover;
+background-position:center;
+position:relative;
+}
+
+#agentAvatar{
+width:150px;
+position:absolute;
+bottom:10px;
+left:50%;
+transform:translateX(-50%);
+}
+
+input{
+padding:10px;
+width:250px;
+}
+
+button{
+padding:10px 20px;
+margin-left:10px;
+cursor:pointer;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <h1>ImpactGrid Creator Studio</h1>
+
+<p>Create AI content with DIJO agents</p>
 
 <input id="topic" placeholder="Enter topic">
 
@@ -16,7 +68,11 @@
 
 <div id="studio">
 
-<div id="room"></div>
+<div id="room">
+
+<img id="agentAvatar" src="" />
+
+</div>
 
 <div id="output"></div>
 

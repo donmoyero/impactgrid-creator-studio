@@ -1,1 +1,22 @@
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+padding:50px;
+}
 
+input{
+padding:10px;
+width:300px;
+}
+
+button{
+padding:10px 20px;
+margin-left:10px;
+}
+
+#output{
+margin-top:40px;
+font-size:20px;
+}

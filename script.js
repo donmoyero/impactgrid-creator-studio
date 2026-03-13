@@ -12,7 +12,7 @@ let room = chooseRoom(agent);
 // generate talking script
 let speech = generateSpeech(agent, topic);
 
-// output text
+// show output
 let output = document.getElementById("output");
 
 output.innerHTML =
@@ -49,6 +49,10 @@ avatar.src = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 else{
 avatar.src = "https://cdn-icons-png.flaticon.com/512/4140/4140048.png";
 }
+
+
+// B-ROLL TRIGGER
+showBroll(topic);
 
 
 // MAKE DIJO SPEAK
@@ -96,14 +100,14 @@ return "Content Studio";
 function generateSpeech(agent, topic){
 
 if(agent === "DIJO Coach"){
-return "Today we are talking about " + topic + ". If you want results, you need discipline, consistency, and the right mindset. Stay focused and keep pushing.";
+return "Today we are talking about " + topic + ". If you want results, you must stay disciplined and consistent. Progress comes from showing up every single day.";
 }
 
 if(agent === "DIJO Analyst"){
-return "Let's analyze " + topic + ". Understanding the numbers and strategies behind this topic can help you make smarter business decisions.";
+return "Let's analyze " + topic + ". Understanding the strategy behind this topic can help businesses grow and make smarter decisions.";
 }
 
-return "Today we are exploring " + topic + ". Creating powerful content starts with understanding your audience and delivering value.";
+return "Today we are exploring " + topic + ". Creating powerful content starts with understanding your audience and delivering value consistently.";
 }
 
 
@@ -122,5 +126,26 @@ speech.pitch = 1;
 speech.volume = 1;
 
 window.speechSynthesis.speak(speech);
+
+}
+
+
+
+// BROLL SYSTEM
+function showBroll(topic){
+
+let roomBox = document.getElementById("room");
+
+if(topic.includes("gym")){
+roomBox.style.backgroundImage = "url(https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b)";
+}
+
+if(topic.includes("business")){
+roomBox.style.backgroundImage = "url(https://images.unsplash.com/photo-1460925895917-afdab827c52f)";
+}
+
+if(topic.includes("content")){
+roomBox.style.backgroundImage = "url(https://images.unsplash.com/photo-1522202176988-66273c2fd55f)";
+}
 
 }

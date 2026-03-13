@@ -4,134 +4,224 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>DIJO CREW — Live AI Acting Crew</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <!-- HEADER -->
-    <div class="hdr">
-      <div class="brand">DIJO <span>CREW</span></div>
-      <div class="live-pill"><span class="ldot"></span>LIVE</div>
-    </div>
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="brand">DIJO <span>CREW</span></div>
+    <div class="live-pill"><span class="ldot"></span><span id="live-status">STANDBY</span></div>
+  </div>
 
-    <!-- STAGE -->
-    <div class="stage" id="stage">
-      <div class="stage-bg" id="stage-bg"></div>
-      <div class="stage-overlay"></div>
-      <div class="stage-grid"></div>
-      <div class="floor"></div>
-      <div class="spot" id="spot" style="left:30%"></div>
-      <div class="room-label" id="room-label">CONTENT STUDIO</div>
+  <!-- STAGE -->
+  <div class="stage" id="stage">
+    <div class="stage-bg" id="stage-bg"></div>
+    <div class="stage-tint"></div>
+    <div class="stage-grid"></div>
+    <div class="beam" id="beam1" style="left:18%"></div>
+    <div class="beam beam2" id="beam2" style="left:55%"></div>
+    <div class="floor"></div>
+    <div class="stage-label" id="stage-label">DIJO STUDIO</div>
 
-      <!-- Camera Rig -->
-      <div class="cam">
-        <div class="cb"><div class="cr"></div><div class="cl"></div></div>
-        <div class="cleg cl1"></div>
-        <div class="cleg cl2"></div>
-        <div class="cleg cl3"></div>
-      </div>
-
-      <!-- Mic Stand -->
-      <div class="mic">
-        <div class="mh"></div>
-        <div class="ma"></div>
-        <div class="mb2"></div>
-      </div>
-
+    <!-- PROPS -->
+    <svg class="props" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg">
+      <!-- Camera tripod -->
+      <rect x="22" y="110" width="30" height="20" rx="4" fill="#1a1a2e" stroke="#00D4FF" stroke-width=".8"/>
+      <circle cx="54" cy="120" r="7" fill="#0a0a14" stroke="#00D4FF" stroke-width=".8"/>
+      <circle cx="26" cy="113" r="3" fill="#FF3B30"><animate attributeName="opacity" values="1;.3;1" dur="1s" repeatCount="indefinite"/></circle>
+      <line x1="32" y1="130" x2="20" y2="175" stroke="#444" stroke-width="1.5"/>
+      <line x1="37" y1="130" x2="37" y2="175" stroke="#444" stroke-width="1.5"/>
+      <line x1="42" y1="130" x2="54" y2="175" stroke="#444" stroke-width="1.5"/>
+      <!-- Mic stand -->
+      <ellipse cx="76" cy="118" rx="6" ry="9" fill="#222" stroke="#555" stroke-width="1"/>
+      <line x1="76" y1="127" x2="76" y2="170" stroke="#555" stroke-width="2"/>
+      <ellipse cx="76" cy="172" rx="12" ry="3" fill="#333"/>
+      <!-- Ring light -->
+      <circle cx="95" cy="95" r="22" fill="none" stroke="#FFD700" stroke-width="6" opacity=".35"/>
+      <circle cx="95" cy="95" r="8" fill="#FFD700" opacity=".2"/>
+      <!-- Teleprompter -->
+      <rect x="18" y="172" width="50" height="32" rx="4" fill="#0d0d18" stroke="#1a1a2e" stroke-width="1"/>
+      <line x1="23" y1="180" x2="63" y2="180" stroke="#4FC3F7" stroke-width="1.5" opacity=".7"/>
+      <line x1="23" y1="186" x2="53" y2="186" stroke="#4FC3F7" stroke-width="1.5" opacity=".4"/>
+      <line x1="23" y1="192" x2="60" y2="192" stroke="#4FC3F7" stroke-width="1.5" opacity=".7"/>
+      <line x1="23" y1="198" x2="48" y2="198" stroke="#4FC3F7" stroke-width="1.5" opacity=".4"/>
       <!-- Laptop -->
-      <div class="lap">
-        <div class="ls">
-          <div class="ll"></div>
-          <div class="ll short"></div>
-          <div class="ll"></div>
-          <div class="ll short"></div>
-        </div>
-        <div class="lb"></div>
-        <div class="lp"></div>
-      </div>
+      <rect x="610" y="192" width="62" height="42" rx="4" fill="#0d0d18" stroke="#1a1a2e" stroke-width="1.5"/>
+      <rect x="614" y="196" width="54" height="34" rx="2" fill="#080810"/>
+      <line x1="618" y1="204" x2="664" y2="204" stroke="#4FC3F7" stroke-width="1.5" opacity=".7"/>
+      <line x1="618" y1="210" x2="650" y2="210" stroke="#4FC3F7" stroke-width="1.5" opacity=".4"/>
+      <line x1="618" y1="216" x2="660" y2="216" stroke="#4FC3F7" stroke-width="1.5" opacity=".7"/>
+      <line x1="618" y1="222" x2="645" y2="222" stroke="#4FC3F7" stroke-width="1.5" opacity=".4"/>
+      <rect x="606" y="234" width="70" height="5" rx="2" fill="#222"/>
+      <rect x="626" y="239" width="26" height="3" rx="1" fill="#1a1a2e"/>
+      <!-- Green screen -->
+      <rect x="624" y="30" width="64" height="160" rx="6" fill="#1a3d1e" stroke="#2d6a30" stroke-width="1.5"/>
+      <text x="656" y="116" fill="#4CAF50" font-size="7" font-weight="700" letter-spacing="1" text-anchor="middle" opacity=".7">GREEN</text>
+      <text x="656" y="126" fill="#4CAF50" font-size="7" font-weight="700" letter-spacing="1" text-anchor="middle" opacity=".7">SCREEN</text>
+      <!-- Shelf -->
+      <rect x="580" y="60" width="36" height="6" rx="2" fill="#1a1a2e"/>
+      <rect x="582" y="34" width="8" height="26" rx="2" fill="#E1306C" opacity=".8"/>
+      <rect x="592" y="38" width="8" height="22" rx="2" fill="#00D4FF" opacity=".8"/>
+      <rect x="602" y="30" width="8" height="30" rx="2" fill="#FFD700" opacity=".8"/>
+      <rect x="580" y="96" width="36" height="6" rx="2" fill="#1a1a2e"/>
+      <rect x="583" y="78" width="7" height="18" rx="2" fill="#9C27B0" opacity=".8"/>
+      <rect x="592" y="74" width="7" height="22" rx="2" fill="#FF6B35" opacity=".8"/>
+      <rect x="601" y="80" width="7" height="16" rx="2" fill="#4CAF50" opacity=".8"/>
+      <!-- Floor line -->
+      <line x1="0" y1="240" x2="700" y2="240" stroke="#00D4FF" stroke-width=".5" opacity=".15"/>
+    </svg>
 
-      <!-- Green Screen -->
-      <div class="gs"><div class="gsl">GREEN SCREEN</div></div>
-
-      <!-- Agent Avatar -->
-      <div class="avatar-wrap" id="avatar-wrap">
-        <img class="avatar-img" id="avatar-img" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Agent"/>
-        <div class="avatar-name" id="avatar-name">DIJO CREW</div>
-        <div class="avatar-role" id="avatar-role">Ready to perform</div>
-      </div>
-
-      <!-- Speech Bubble -->
-      <div class="speech-bub" id="speech-bub"></div>
-
-      <!-- Voice Indicator -->
-      <div class="voice-ind" id="voice-ind">
-        <span class="vi-dot"></span>
-        <span class="vi-txt">SPEAKING</span>
-      </div>
-
-      <!-- Caption Bar -->
-      <div class="caption-bar" id="caption-bar"></div>
-
-      <!-- Performance Overlay -->
-      <div class="perf" id="perf">
-        <div class="perf-hdr">
-          <div class="perf-lbl" id="perf-lbl">ON STAGE</div>
-          <button class="perf-close" onclick="closePerf()">✕</button>
-        </div>
-        <div class="perf-txt" id="perf-txt"></div>
-        <div class="perf-act" id="perf-act"></div>
-      </div>
+    <!-- CHARACTER A: DIJO-IG -->
+    <div class="character" id="char-ig" style="left:120px;" onclick="selectChar('ig')">
+      <div class="speech-bub" id="bub-ig">Ready to perform!</div>
+      <svg class="char-svg" viewBox="0 0 70 130">
+        <ellipse cx="35" cy="128" rx="18" ry="4" fill="#E1306C" opacity=".2"/>
+        <g class="leg-l"><rect x="24" y="92" width="10" height="28" rx="5" fill="#C41E5A"/><rect x="22" y="116" width="14" height="7" rx="3" fill="#E1306C"/></g>
+        <g class="leg-r"><rect x="36" y="92" width="10" height="28" rx="5" fill="#C41E5A"/><rect x="34" y="116" width="14" height="7" rx="3" fill="#E1306C"/></g>
+        <g class="body-breathe"><rect x="20" y="58" width="30" height="38" rx="10" fill="#E1306C"/><text x="35" y="82" fill="rgba(255,255,255,.4)" font-size="9" font-weight="700" text-anchor="middle" font-family="sans-serif">IG</text></g>
+        <g class="arm-l"><rect x="8" y="60" width="12" height="28" rx="6" fill="#C41E5A"/><rect x="6" y="85" width="14" height="8" rx="4" fill="#E1306C"/></g>
+        <g class="arm-r"><rect x="50" y="60" width="12" height="28" rx="6" fill="#C41E5A"/><rect x="50" y="85" width="14" height="8" rx="4" fill="#E1306C"/></g>
+        <rect x="30" y="48" width="10" height="12" rx="4" fill="#C41E5A"/>
+        <g class="head-nod">
+          <rect x="18" y="18" width="34" height="34" rx="14" fill="#E1306C"/>
+          <circle cx="27" cy="32" r="4" fill="#fff"/><circle cx="43" cy="32" r="4" fill="#fff"/>
+          <circle cx="28" cy="33" r="2" fill="#1a0010"/><circle cx="44" cy="33" r="2" fill="#1a0010"/>
+          <path d="M27 40 Q35 46 43 40" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <rect x="18" y="14" width="34" height="10" rx="8" fill="#FF6B9D"/>
+          <ellipse cx="20" cy="18" rx="5" ry="7" fill="#FF6B9D"/>
+          <ellipse cx="50" cy="18" rx="5" ry="7" fill="#FF6B9D"/>
+        </g>
+      </svg>
+      <div class="char-name" style="color:#E1306C;">DIJO-IG</div>
+      <div class="char-role">Instagram Creator</div>
+      <div class="hired-tag" style="background:rgba(225,48,108,.15);color:#E1306C;border:1px solid #E1306C44;">ON STAGE</div>
     </div>
 
-    <!-- CONTROL PANEL -->
-    <div class="panel">
+    <!-- CHARACTER B: DIJO-TT -->
+    <div class="character" id="char-tt" style="left:215px;" onclick="selectChar('tt')">
+      <div class="speech-bub" id="bub-tt">I go viral! 🎵</div>
+      <svg class="char-svg" viewBox="0 0 70 130">
+        <ellipse cx="35" cy="128" rx="18" ry="4" fill="#69C9D0" opacity=".2"/>
+        <g class="leg-l"><rect x="24" y="92" width="10" height="28" rx="5" fill="#111"/><rect x="22" y="116" width="14" height="7" rx="3" fill="#222"/></g>
+        <g class="leg-r"><rect x="36" y="92" width="10" height="28" rx="5" fill="#111"/><rect x="34" y="116" width="14" height="7" rx="3" fill="#222"/></g>
+        <g class="body-breathe"><rect x="20" y="58" width="30" height="38" rx="10" fill="#111" stroke="#69C9D0" stroke-width="1.5"/><text x="35" y="82" fill="#69C9D0" font-size="9" font-weight="700" text-anchor="middle" font-family="sans-serif" opacity=".6">TT</text></g>
+        <g class="arm-l arm-wave"><rect x="8" y="60" width="12" height="28" rx="6" fill="#1a1a1a"/><rect x="6" y="85" width="14" height="8" rx="4" fill="#222"/></g>
+        <g class="arm-r"><rect x="50" y="60" width="12" height="28" rx="6" fill="#1a1a1a"/><rect x="50" y="85" width="14" height="8" rx="4" fill="#222"/></g>
+        <rect x="30" y="48" width="10" height="12" rx="4" fill="#1a1a1a"/>
+        <g class="head-nod">
+          <rect x="18" y="18" width="34" height="34" rx="14" fill="#1a1a1a" stroke="#69C9D0" stroke-width="1.5"/>
+          <circle cx="27" cy="32" r="4" fill="#69C9D0" opacity=".9"/><circle cx="43" cy="32" r="4" fill="#69C9D0" opacity=".9"/>
+          <circle cx="28" cy="33" r="2" fill="#000"/><circle cx="44" cy="33" r="2" fill="#000"/>
+          <path d="M27 40 Q35 46 43 40" stroke="#69C9D0" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M18 28 Q18 12 35 12 Q52 12 52 28" stroke="#69C9D0" stroke-width="3" fill="none"/>
+          <rect x="14" y="26" width="7" height="10" rx="3" fill="#69C9D0"/>
+          <rect x="49" y="26" width="7" height="10" rx="3" fill="#69C9D0"/>
+        </g>
+      </svg>
+      <div class="char-name" style="color:#69C9D0;">DIJO-TT</div>
+      <div class="char-role">TikTok Performer</div>
+      <div class="hired-tag" style="background:rgba(105,201,208,.15);color:#69C9D0;border:1px solid #69C9D044;">ON STAGE</div>
+    </div>
 
-      <!-- Platform Tabs -->
-      <div class="ptabs">
-        <div class="ptab pt-ig on" id="tab-ig" onclick="swPlat('ig')">
-          <span class="ico">📸</span>Instagram
-        </div>
-        <div class="ptab pt-tt" id="tab-tt" onclick="swPlat('tt')">
-          <span class="ico">🎵</span>TikTok
-        </div>
-        <div class="ptab pt-yt" id="tab-yt" onclick="swPlat('yt')">
-          <span class="ico">🎥</span>YouTube
-        </div>
-        <div class="ptab pt-li" id="tab-li" onclick="swPlat('li')">
-          <span class="ico">💼</span>LinkedIn
-        </div>
+    <!-- CHARACTER C: DIJO-YT -->
+    <div class="character" id="char-yt" style="left:310px;" onclick="selectChar('yt')">
+      <div class="speech-bub" id="bub-yt">Let's hit record! 🎥</div>
+      <svg class="char-svg" viewBox="0 0 70 130">
+        <ellipse cx="35" cy="128" rx="18" ry="4" fill="#FF0000" opacity=".2"/>
+        <g class="leg-l"><rect x="24" y="92" width="10" height="28" rx="5" fill="#CC0000"/><rect x="22" y="116" width="14" height="7" rx="3" fill="#FF0000"/></g>
+        <g class="leg-r"><rect x="36" y="92" width="10" height="28" rx="5" fill="#CC0000"/><rect x="34" y="116" width="14" height="7" rx="3" fill="#FF0000"/></g>
+        <g class="body-breathe"><rect x="20" y="58" width="30" height="38" rx="10" fill="#FF0000"/><polygon points="30,68 30,84 46,76" fill="rgba(255,255,255,.6)"/></g>
+        <g class="arm-l"><rect x="8" y="60" width="12" height="28" rx="6" fill="#CC0000"/><rect x="6" y="85" width="14" height="8" rx="4" fill="#FF0000"/></g>
+        <g class="arm-r"><rect x="50" y="60" width="12" height="28" rx="6" fill="#CC0000"/><rect x="50" y="85" width="14" height="8" rx="4" fill="#FF0000"/></g>
+        <rect x="30" y="48" width="10" height="12" rx="4" fill="#CC0000"/>
+        <g class="head-nod">
+          <rect x="18" y="18" width="34" height="34" rx="14" fill="#FF0000"/>
+          <circle cx="27" cy="32" r="4" fill="#fff"/><circle cx="43" cy="32" r="4" fill="#fff"/>
+          <circle cx="28" cy="33" r="2" fill="#1a0000"/><circle cx="44" cy="33" r="2" fill="#1a0000"/>
+          <path d="M27 40 Q35 46 43 40" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <rect x="16" y="14" width="38" height="12" rx="6" fill="#CC0000"/>
+          <rect x="12" y="20" width="46" height="6" rx="3" fill="#AA0000"/>
+        </g>
+      </svg>
+      <div class="char-name" style="color:#FF4444;">DIJO-YT</div>
+      <div class="char-role">YouTube Host</div>
+      <div class="hired-tag" style="background:rgba(255,0,0,.12);color:#FF4444;border:1px solid #FF444444;">ON STAGE</div>
+    </div>
+
+    <!-- CHARACTER D: DIJO-LI -->
+    <div class="character" id="char-li" style="left:405px;" onclick="selectChar('li')">
+      <div class="speech-bub" id="bub-li">Professional mode 💼</div>
+      <svg class="char-svg" viewBox="0 0 70 130">
+        <ellipse cx="35" cy="128" rx="18" ry="4" fill="#00A0DC" opacity=".2"/>
+        <g class="leg-l"><rect x="24" y="92" width="10" height="28" rx="5" fill="#005580"/><rect x="22" y="116" width="14" height="7" rx="3" fill="#0077B5"/></g>
+        <g class="leg-r"><rect x="36" y="92" width="10" height="28" rx="5" fill="#005580"/><rect x="34" y="116" width="14" height="7" rx="3" fill="#0077B5"/></g>
+        <g class="body-breathe">
+          <rect x="20" y="58" width="30" height="38" rx="10" fill="#0077B5"/>
+          <rect x="30" y="58" width="10" height="38" rx="0" fill="#005c8a"/>
+          <polygon points="35,60 32,72 35,82 38,72" fill="#FFD700" opacity=".8"/>
+        </g>
+        <g class="arm-l"><rect x="8" y="60" width="12" height="28" rx="6" fill="#005580"/><rect x="6" y="85" width="14" height="8" rx="4" fill="#0077B5"/></g>
+        <g class="arm-r"><rect x="50" y="60" width="12" height="28" rx="6" fill="#005580"/><rect x="50" y="85" width="14" height="8" rx="4" fill="#0077B5"/></g>
+        <rect x="30" y="48" width="10" height="12" rx="4" fill="#005580"/>
+        <g class="head-nod">
+          <rect x="18" y="18" width="34" height="34" rx="14" fill="#0077B5"/>
+          <circle cx="27" cy="32" r="4" fill="#fff"/><circle cx="43" cy="32" r="4" fill="#fff"/>
+          <circle cx="28" cy="33" r="2" fill="#001a2e"/><circle cx="44" cy="33" r="2" fill="#001a2e"/>
+          <path d="M27 40 Q35 46 43 40" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <rect x="21" y="28" width="10" height="8" rx="3" fill="none" stroke="#fff" stroke-width="1.2"/>
+          <rect x="39" y="28" width="10" height="8" rx="3" fill="none" stroke="#fff" stroke-width="1.2"/>
+          <line x1="31" y1="32" x2="39" y2="32" stroke="#fff" stroke-width="1.2"/>
+        </g>
+      </svg>
+      <div class="char-name" style="color:#00A0DC;">DIJO-LI</div>
+      <div class="char-role">LinkedIn Strategist</div>
+      <div class="hired-tag" style="background:rgba(0,160,220,.12);color:#00A0DC;border:1px solid #00A0DC44;">ON STAGE</div>
+    </div>
+
+    <!-- Voice indicator -->
+    <div class="voice-ind" id="voice-ind"><span class="vi-dot"></span><span class="vi-txt">SPEAKING</span></div>
+    <!-- Caption bar -->
+    <div class="cap-bar" id="cap-bar"></div>
+  </div>
+
+  <!-- PANEL -->
+  <div class="panel">
+    <!-- Platform tabs -->
+    <div class="ptabs">
+      <div class="ptab on-ig" id="tab-ig" onclick="selectChar('ig')"><span class="ico">📸</span>Instagram</div>
+      <div class="ptab" id="tab-tt" onclick="selectChar('tt')"><span class="ico">🎵</span>TikTok</div>
+      <div class="ptab" id="tab-yt" onclick="selectChar('yt')"><span class="ico">🎥</span>YouTube</div>
+      <div class="ptab" id="tab-li" onclick="selectChar('li')"><span class="ico">💼</span>LinkedIn</div>
+    </div>
+    <!-- Content type -->
+    <div class="ctype-bar">
+      <div class="ctype on" id="ct-ad" onclick="swType('ad')">Ad / Promo</div>
+      <div class="ctype" id="ct-tutorial" onclick="swType('tutorial')">Tutorial</div>
+      <div class="ctype" id="ct-reaction" onclick="swType('reaction')">Reaction</div>
+      <div class="ctype" id="ct-announcement" onclick="swType('announcement')">Announcement</div>
+      <div class="ctype" id="ct-story" onclick="swType('story')">Storytelling</div>
+    </div>
+    <!-- Script input -->
+    <div class="script-area">
+      <div class="script-label">YOUR SCRIPT / IDEA</div>
+      <textarea class="script-inp" id="script-inp" placeholder="Type your script or content idea... e.g. 'Promote my fitness app FitPulse targeting young professionals'"></textarea>
+      <div class="btn-row">
+        <button class="perform-btn" id="perform-btn" onclick="perform()">🎬 PERFORM IT</button>
+        <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Toggle voice">🔊</button>
       </div>
-
-      <!-- Content Type Pills -->
-      <div class="tbar">
-        <div class="tpill on" id="tp-caption" onclick="swType('caption')">Caption & Hook</div>
-        <div class="tpill" id="tp-script" onclick="swType('script')">Act It Out 🎬</div>
-        <div class="tpill" id="tp-hashtags" onclick="swType('hashtags')">Hashtags</div>
-        <div class="tpill" id="tp-schedule" onclick="swType('schedule')">Schedule</div>
-        <div class="tpill" id="tp-ideas" onclick="swType('ideas')">Ideas</div>
-      </div>
-
-      <!-- Brief Input -->
-      <div class="bbar">
-        <div class="blbl">BRIEF</div>
-        <input class="binp" id="binp" placeholder="Your brand, niche or topic..."/>
-        <div class="btn-row">
-          <button class="abtn" id="abtn" onclick="go()">ACTION ↗</button>
-          <button class="vbtn" id="vbtn" onclick="toggleVoice()" title="Toggle voice">🔊</button>
-        </div>
-      </div>
-
-      <!-- Output -->
-      <div class="out" id="out">
-        <div class="empty">👆 Pick a platform, content type, write your brief — hit ACTION.</div>
-      </div>
-
+    </div>
+    <!-- Output -->
+    <div class="out-area" id="out-area">
+      <div class="empty-out">👆 Click a character, pick content type, write your script — hit PERFORM.</div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>

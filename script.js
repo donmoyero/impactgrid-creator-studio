@@ -1,4 +1,4 @@
-function generate(){
+async function generate(){
 
 let topic = document.getElementById("topic").value.toLowerCase();
 
@@ -6,7 +6,27 @@ let agent = chooseAgent(topic);
 
 let room = chooseRoom(agent);
 
-let speech = generateSpeech(agent, topic);
+
+// CALL AI SERVER
+let response = await fetch("https://dijo-ai.onrender.com/generate",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+topic: topic,
+agent: agent
+})
+
+})
+
+let data = await response.json()
+
+let speech = data.text
+
 
 
 // SCENE TIMELINE
@@ -63,7 +83,7 @@ showBroll(topic);
 
 
 // CAPTIONS
-generateCaptions(speech);
+generateCaptions();
 
 
 // VOICE
@@ -103,22 +123,6 @@ return "Data Lab";
 
 return "Content Studio";
 
-}
-
-
-
-// SPEECH GENERATOR
-function generateSpeech(agent, topic){
-
-if(agent === "DIJO Coach"){
-return "Today we are talking about " + topic + ". If you want results, you must stay disciplined and consistent. Progress comes from showing up every single day.";
-}
-
-if(agent === "DIJO Analyst"){
-return "Let's analyze " + topic + ". Understanding the strategy behind this topic can help businesses grow and make smarter decisions.";
-}
-
-return "Today we are exploring " + topic + ". Creating powerful content starts with understanding your audience and delivering value consistently.";
 }
 
 
@@ -164,9 +168,11 @@ roomBox.style.backgroundImage = "url(https://images.unsplash.com/photo-152220217
 
 
 // CAPTION GENERATOR
-function generateCaptions(text){
+function generateCaptions(){
 
 let caption = document.querySelector(".caption");
+
+if(!caption) return;
 
 caption.style.fontSize = "18px";
 caption.style.background = "rgba(0,0,0,0.6)";
@@ -177,7 +183,7 @@ caption.style.borderRadius = "6px";
 
 
 
-// EXPORT VIDEO (basic placeholder)
+// EXPORT VIDEO (placeholder)
 function exportVideo(){
 
 alert("Video export feature coming next. This will render the DIJO scene as a downloadable video.");

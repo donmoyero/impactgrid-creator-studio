@@ -1,165 +1,578 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<title>ImpactGrid Creator Studio</title>
-
-<link rel="stylesheet" href="style.css">
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DIJO CREW — Live AI Acting Crew for Content Creators</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-
-body{
-font-family: Arial;
-background:#111;
-color:white;
-text-align:center;
-padding:40px;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#FFD700;--amber:#FFB300;--dark:#0f0c00;--cream:#FFF9F0;
+  --ig:#E1306C;--tt:#010101;--yt:#FF0000;--li:#0077B5;
+  --surface:#1a1600;--border:#2e2700;--text:#fff;--muted:#998a40;
 }
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
 
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(15,12,0,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--gold);}
+.nav-brand span{color:#fff;}
+.nav-pill{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:1px;color:var(--gold);}
+.live-dot{width:7px;height:7px;background:#FF3B30;border-radius:50%;animation:pulse 1.1s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
 
-/* HEADER */
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 60px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,179,0,.12) 0%,transparent 70%);pointer-events:none;}
+.hero-tag{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--amber);margin-bottom:24px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,110px);line-height:.9;letter-spacing:2px;margin-bottom:20px;}
+.hero-title span{color:var(--gold);}
+.hero-sub{font-size:clamp(14px,2vw,18px);color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:36px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.btn-primary{padding:14px 32px;background:var(--amber);border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:'Bebas Neue',sans-serif;letter-spacing:1.5px;cursor:pointer;color:var(--dark);transition:all .2s;}
+.btn-primary:hover{background:var(--gold);transform:translateY(-2px);}
+.btn-ghost{padding:14px 32px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;}
+.btn-ghost:hover{border-color:var(--amber);color:var(--amber);}
 
-h1{
-margin-bottom:10px;
-}
+/* Agent preview strip in hero */
+.agent-strip{display:flex;gap:16px;justify-content:center;margin-top:48px;flex-wrap:wrap;}
+.agent-preview{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.ap-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid var(--border);transition:all .3s;}
+.ap-avatar:hover{transform:translateY(-4px);border-color:var(--amber);}
+.ap-ig{background:linear-gradient(135deg,#F77737,#E1306C,#833AB4);}
+.ap-tt{background:linear-gradient(135deg,#111,#69C9D0);}
+.ap-yt{background:linear-gradient(135deg,#FF0000,#CC0000);}
+.ap-li{background:linear-gradient(135deg,#0077B5,#00A0DC);}
+.ap-name{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);font-family:'Bebas Neue',sans-serif;}
 
-p{
-opacity:0.8;
-}
+/* ── STUDIO SECTION ── */
+.section{padding:80px 24px;}
+.section-label{text-align:center;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--amber);margin-bottom:12px;}
+.section-title{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,64px);letter-spacing:1px;margin-bottom:12px;}
+.section-sub{text-align:center;color:var(--muted);font-size:15px;max-width:500px;margin:0 auto 48px;}
 
+.studio-wrap{max-width:900px;margin:0 auto;}
 
-/* INPUT AREA */
+/* ── STAGE ── */
+.stage{position:relative;width:100%;height:340px;background:linear-gradient(180deg,#1a1400 0%,#2a1e00 60%,#3d2a00 100%);border-radius:20px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:16px;}
+.stage::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,200,80,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,200,80,.06) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;}
+.stage-floor{position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(180deg,#2a1e00 0%,#1a1200 100%);border-top:2px solid #3d2a00;}
+.stage-floor::before{content:'';position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(255,200,80,.05) 1px,transparent 1px);background-size:60px 100%;}
 
-input{
-padding:12px;
-width:260px;
-border-radius:6px;
-border:none;
-margin-right:10px;
-}
+/* Spotlights */
+.spot{position:absolute;top:0;width:180px;height:280px;background:radial-gradient(ellipse at 50% 0%,rgba(255,200,80,.2) 0%,transparent 70%);pointer-events:none;transition:left .5s ease;}
 
-button{
-padding:12px 20px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-background:#00c2ff;
-color:white;
-font-weight:bold;
-}
+/* Props */
+.cam-rig{position:absolute;left:16px;top:90px;}
+.cam-body{width:32px;height:22px;background:#1a1a1a;border-radius:5px;position:relative;border:1px solid #333;}
+.cam-lens{width:14px;height:14px;background:#0a0a0a;border-radius:50%;position:absolute;right:-5px;top:4px;border:2px solid #444;}
+.cam-rec{width:7px;height:7px;background:#FF3B30;border-radius:50%;position:absolute;top:3px;left:3px;animation:pulse 1s ease-in-out infinite;}
+.cam-leg{width:2px;height:46px;background:#444;position:absolute;top:22px;}
+.cl1{left:5px;transform:rotate(-13deg);transform-origin:top;}
+.cl2{left:15px;}
+.cl3{left:24px;transform:rotate(13deg);transform-origin:top;}
+.ring{position:absolute;left:56px;top:62px;opacity:.5;}
+.ring svg{width:46px;height:46px;}
+.mic-s{position:absolute;left:52px;bottom:102px;}
+.mic-head{width:12px;height:18px;background:#444;border-radius:6px 6px 3px 3px;border:1.5px solid #666;margin:0 auto;}
+.mic-arm{width:2px;height:34px;background:#555;margin:0 auto;}
+.mic-base{width:24px;height:4px;background:#333;border-radius:2px;}
+.tele{position:absolute;left:16px;bottom:104px;width:48px;height:30px;background:#111;border-radius:4px;border:1.5px solid #222;display:flex;flex-direction:column;gap:3px;padding:4px;align-items:stretch;}
+.tl{height:2px;border-radius:1px;background:#4FC3F7;opacity:.7;}
+.laptop-p{position:absolute;right:32px;bottom:104px;}
+.lp-scr{width:56px;height:36px;background:#0d0d1a;border-radius:4px 4px 0 0;border:1.5px solid #333;padding:4px;display:flex;flex-direction:column;gap:3px;}
+.ll{height:2px;border-radius:1px;background:#4FC3F7;}
+.lp-bas{width:62px;height:5px;background:#444;border-radius:0 0 3px 3px;}
+.lp-pad{width:20px;height:3px;background:#666;margin:1px auto 0;border-radius:1px;}
+.gs{position:absolute;right:14px;top:32px;width:76px;height:164px;background:linear-gradient(180deg,#2d6a30,#1b4a1e);border-radius:8px;border:1.5px solid #1a5c1e;opacity:.9;}
+.gs-lbl{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:700;letter-spacing:1px;color:#4CAF50;opacity:.8;white-space:nowrap;}
+.shelf-u{position:absolute;right:104px;top:32px;width:76px;}
+.sb-board{width:100%;height:7px;background:#3d2a00;border-radius:2px;margin-bottom:0;}
+.sb-items{display:flex;align-items:flex-end;gap:3px;padding-bottom:2px;justify-content:flex-end;}
+.sb-book{border-radius:2px;width:9px;}
 
-button:hover{
-background:#0099cc;
-}
+/* Agents on stage */
+.agent{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:all .45s cubic-bezier(.34,1.56,.64,1);user-select:none;z-index:10;}
+.agent:hover .a-body{filter:brightness(1.15);}
+.a-head{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid rgba(255,255,255,.2);box-shadow:0 3px 10px rgba(0,0,0,.4);position:absolute;top:-17px;}
+.a-body{width:36px;height:50px;border-radius:50% 50% 38% 38%/40% 40% 52% 52%;box-shadow:0 5px 18px rgba(0,0,0,.4);position:relative;transition:all .3s;}
+.a-lbl{font-size:8px;font-weight:700;letter-spacing:.8px;margin-top:19px;color:var(--muted);font-family:'Bebas Neue',sans-serif;}
+.hired-badge{position:absolute;top:-24px;right:-10px;background:var(--gold);color:var(--dark);font-size:7px;font-weight:700;padding:2px 6px;border-radius:10px;opacity:0;transition:opacity .2s;white-space:nowrap;}
+.agent.hired .hired-badge{opacity:1;}
+.bubble{position:absolute;bottom:76px;left:50%;transform:translateX(-50%);background:#1a1400;border:1px solid var(--border);border-radius:12px;padding:6px 10px;font-size:9px;line-height:1.4;max-width:110px;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none;color:#ccc;z-index:20;white-space:normal;}
+.bubble::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border);}
+.bubble.show{opacity:1;}
+.ag-ig .a-body{background:linear-gradient(135deg,#F77737,#E1306C,#833AB4);}
+.ag-ig .a-head{background:#3d0820;}
+.ag-tt .a-body{background:linear-gradient(135deg,#111,#69C9D0);}
+.ag-tt .a-head{background:#041a1a;}
+.ag-yt .a-body{background:linear-gradient(135deg,#FF0000,#880000);}
+.ag-yt .a-head{background:#1a0000;}
+.ag-li .a-body{background:linear-gradient(135deg,#0077B5,#003d5c);}
+.ag-li .a-head{background:#001a26;}
 
+/* Performance overlay */
+.perf-overlay{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(10,8,0,.95);border-radius:0 0 18px 18px;padding:16px 18px;z-index:30;border-top:1.5px solid var(--border);}
+.perf-overlay.show{display:block;}
+.perf-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.perf-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--amber);}
+.close-p{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;}
+.perf-script{font-size:13px;color:#ddd;line-height:1.65;white-space:pre-wrap;}
+.perf-action{display:inline-block;margin-top:8px;font-size:9px;background:var(--amber);color:var(--dark);padding:3px 12px;border-radius:20px;font-weight:700;}
 
-/* STUDIO */
+/* ── UI PANEL ── */
+.ui-panel{background:var(--surface);border-radius:18px;border:1.5px solid var(--border);overflow:hidden;}
+.plat-tabs{display:flex;border-bottom:1.5px solid var(--border);}
+.plat-tab{flex:1;padding:12px 4px;text-align:center;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);transition:all .2s;border-bottom:2.5px solid transparent;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.plat-tab .pt-ico{font-size:18px;}
+.p-ig.on{color:var(--ig);border-bottom-color:var(--ig);background:rgba(225,48,108,.08);}
+.p-tt.on{color:#69C9D0;border-bottom-color:#69C9D0;background:rgba(105,201,208,.06);}
+.p-yt.on{color:var(--yt);border-bottom-color:var(--yt);background:rgba(255,0,0,.06);}
+.p-li.on{color:#00A0DC;border-bottom-color:#00A0DC;background:rgba(0,119,181,.08);}
+.type-bar{display:flex;gap:6px;padding:12px 14px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+.type-pill{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid var(--border);cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;}
+.type-pill.on{background:var(--amber);color:var(--dark);border-color:var(--amber);}
+.type-pill:hover:not(.on){border-color:var(--amber);color:var(--amber);}
+.brief-bar{padding:12px 14px;display:flex;gap:8px;border-bottom:1px solid var(--border);align-items:center;}
+.brief-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--muted);white-space:nowrap;}
+.brief-inp{flex:1;padding:9px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:13px;font-family:'Outfit',sans-serif;background:#120e00;outline:none;color:#fff;}
+.brief-inp::placeholder{color:var(--muted);}
+.brief-inp:focus{border-color:var(--amber);}
+.go-btn{padding:9px 20px;background:var(--amber);border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;cursor:pointer;color:var(--dark);transition:all .15s;white-space:nowrap;}
+.go-btn:hover{background:var(--gold);transform:scale(1.04);}
+.go-btn:active{transform:scale(.97);}
+.go-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.output{padding:14px 16px;min-height:90px;}
+.out-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.out-agent-chip{display:flex;align-items:center;gap:5px;background:#1a1400;border:1px solid var(--border);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--amber);}
+.out-type-chip{background:var(--amber);color:var(--dark);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.5px;}
+.out-content{font-size:13px;line-height:1.75;color:#ddd;white-space:pre-wrap;}
+.out-section{margin-bottom:12px;}
+.out-stitle{font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--amber);margin-bottom:5px;}
+.hash-cloud{display:flex;flex-wrap:wrap;gap:6px;}
+.hash-tag{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;border:1.5px solid;}
+.ht-ig{border-color:var(--ig);color:var(--ig);background:rgba(225,48,108,.08);}
+.ht-tt{border-color:#69C9D0;color:#69C9D0;background:rgba(105,201,208,.06);}
+.ht-yt{border-color:var(--yt);color:#ff6666;background:rgba(255,0,0,.06);}
+.ht-li{border-color:#00A0DC;color:#00A0DC;background:rgba(0,160,220,.08);}
+.sched-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:6px;}
+.sched-day{background:#120e00;border-radius:8px;padding:8px 4px;text-align:center;border:1px solid var(--border);}
+.sd-name{font-size:8px;font-weight:700;color:var(--muted);letter-spacing:.5px;}
+.sd-time{font-size:9px;font-weight:600;color:#fff;margin-top:2px;}
+.sd-type{font-size:7px;margin-top:2px;color:var(--amber);}
+.sd-tip{font-size:10px;color:#aaa;margin-top:4px;line-height:1.4;}
+.ideas-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+.idea-card{background:#120e00;border-radius:10px;padding:12px;border-left:3px solid var(--amber);}
+.idea-num{font-size:9px;font-weight:700;color:var(--amber);margin-bottom:4px;letter-spacing:.5px;}
+.idea-txt{font-size:11px;line-height:1.5;color:#ccc;}
+.idea-fmt{font-size:9px;color:var(--muted);margin-top:4px;}
+.typing{display:flex;gap:5px;align-items:center;padding:8px 0;}
+.td{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:tdot .8s ease-in-out infinite;}
+.td:nth-child(2){animation-delay:.15s;}
+.td:nth-child(3){animation-delay:.3s;}
+@keyframes tdot{0%,80%,100%{transform:scale(0);opacity:.3}40%{transform:scale(1);opacity:1}}
+.empty{color:var(--muted);font-size:13px;line-height:1.6;}
 
-#studio{
-margin-top:40px;
-display:flex;
-flex-direction:column;
-align-items:center;
-}
+/* ── HOW IT WORKS ── */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:900px;margin:0 auto;}
+.how-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:24px;transition:border-color .2s;}
+.how-card:hover{border-color:var(--amber);}
+.how-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--amber);line-height:1;}
+.how-title{font-size:15px;font-weight:700;margin:8px 0 6px;}
+.how-sub{font-size:12px;color:var(--muted);line-height:1.6;}
 
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--gold);margin-bottom:8px;}
+.footer-sub{font-size:12px;color:var(--muted);}
 
-/* VERTICAL VIDEO FRAME */
-
-#videoFrame{
-width:320px;
-height:560px;
-background:#000;
-border-radius:16px;
-overflow:hidden;
-position:relative;
-box-shadow:0 0 25px rgba(0,0,0,0.7);
-}
-
-
-/* ROOM BACKGROUND */
-
-#room{
-width:100%;
-height:100%;
-background:#333;
-background-size:cover;
-background-position:center;
-position:relative;
-}
-
-
-/* AVATAR */
-
-#agentAvatar{
-width:160px;
-position:absolute;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-}
-
-
-/* CAPTIONS */
-
-.caption{
-position:absolute;
-bottom:120px;
-left:50%;
-transform:translateX(-50%);
-width:85%;
-background:rgba(0,0,0,0.6);
-padding:10px;
-border-radius:8px;
-font-size:16px;
-}
-
-
-/* INFO PANEL */
-
-#output{
-margin-top:30px;
-max-width:500px;
-}
-
+/* ── SERVER CONFIG NOTICE ── */
+.config-bar{background:#1a1100;border:1px solid #3d2a00;border-radius:10px;padding:10px 16px;margin-bottom:16px;font-size:11px;color:var(--amber);display:flex;align-items:center;gap:8px;}
+.config-bar code{background:#0f0c00;border-radius:4px;padding:2px 7px;font-family:monospace;font-size:11px;color:#FFD700;}
 </style>
-
 </head>
-
 <body>
 
-<h1>ImpactGrid Creator Studio</h1>
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">DIJO <span>CREW</span></div>
+  <div class="nav-pill"><span class="live-dot"></span> LIVE CREW ONLINE</div>
+</nav>
 
-<p>Create AI content with DIJO agents</p>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">AI ACTING CREW FOR CONTENT CREATORS</div>
+  <h1 class="hero-title">YOUR CREW.<br/><span>ON DEMAND.</span></h1>
+  <p class="hero-sub">Hire live AI agents that act, script, perform and create social media content for Instagram, TikTok, YouTube and LinkedIn — powered by your studio.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="document.getElementById('studio').scrollIntoView({behavior:'smooth'})">HIRE THE CREW</button>
+    <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">HOW IT WORKS</button>
+  </div>
+  <div class="agent-strip">
+    <div class="agent-preview"><div class="ap-avatar ap-ig">📸</div><div class="ap-name">DIJO-IG</div></div>
+    <div class="agent-preview"><div class="ap-avatar ap-tt">🎵</div><div class="ap-name">DIJO-TT</div></div>
+    <div class="agent-preview"><div class="ap-avatar ap-yt">🎥</div><div class="ap-name">DIJO-YT</div></div>
+    <div class="agent-preview"><div class="ap-avatar ap-li">💼</div><div class="ap-name">DIJO-LI</div></div>
+  </div>
+</section>
 
+<!-- STUDIO -->
+<section class="section" id="studio">
+  <div class="section-label">THE LIVE STUDIO</div>
+  <h2 class="section-title">STEP ON STAGE</h2>
+  <p class="section-sub">Select your agent, pick your content type, drop your brief — watch your crew perform.</p>
 
-<input id="topic" placeholder="Enter topic">
+  <div class="studio-wrap">
+    <!-- Server config bar -->
+    <div class="config-bar">
+      ⚡ Connected to your server at <code id="server-url-display">your-render-url.onrender.com</code>
+      — <a href="#" onclick="promptServerUrl()" style="color:var(--amber)">change</a>
+    </div>
 
-<button onclick="generate()">Generate</button>
+    <!-- STAGE -->
+    <div class="stage" id="stage">
+      <div class="spot" id="spot" style="left:20%"></div>
 
+      <!-- Floor -->
+      <div class="stage-floor"></div>
 
-<div id="studio">
+      <!-- Camera -->
+      <div class="cam-rig">
+        <div class="cam-body"><div class="cam-rec"></div><div class="cam-lens"></div></div>
+        <div class="cam-leg cl1"></div><div class="cam-leg cl2"></div><div class="cam-leg cl3"></div>
+      </div>
 
+      <!-- Ring light -->
+      <div class="ring">
+        <svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="18" stroke="#FFD700" stroke-width="6" fill="none"/><circle cx="23" cy="23" r="7" fill="#FFD700" opacity=".5"/></svg>
+      </div>
 
-<div id="videoFrame">
+      <!-- Teleprompter -->
+      <div class="tele">
+        <div class="tl" style="width:100%"></div><div class="tl" style="width:60%;opacity:.4"></div>
+        <div class="tl" style="width:80%"></div><div class="tl" style="width:50%;opacity:.4"></div>
+      </div>
 
-<div id="room">
+      <!-- Mic -->
+      <div class="mic-s"><div class="mic-head"></div><div class="mic-arm"></div><div class="mic-base"></div></div>
 
-<img id="agentAvatar" src="">
+      <!-- Shelf -->
+      <div class="shelf-u">
+        <div class="sb-items">
+          <div class="sb-book" style="height:24px;background:#E1306C;"></div>
+          <div class="sb-book" style="height:18px;background:#69C9D0;"></div>
+          <div class="sb-book" style="height:28px;background:#FF0000;"></div>
+          <div class="sb-book" style="height:16px;background:#0077B5;"></div>
+        </div>
+        <div class="sb-board"></div>
+        <div class="sb-items" style="margin-top:16px;">
+          <div class="sb-book" style="height:20px;background:#FFB300;"></div>
+          <div class="sb-book" style="height:22px;background:#9C27B0;"></div>
+          <div class="sb-book" style="height:14px;background:#4CAF50;"></div>
+        </div>
+        <div class="sb-board"></div>
+      </div>
 
-</div>
+      <!-- Green screen -->
+      <div class="gs"><div class="gs-lbl">GREEN SCREEN</div></div>
 
-</div>
+      <!-- Laptop -->
+      <div class="laptop-p">
+        <div class="lp-scr"><div class="ll"></div><div class="ll" style="width:60%;opacity:.5"></div><div class="ll"></div><div class="ll" style="width:70%;opacity:.5"></div></div>
+        <div class="lp-bas"></div><div class="lp-pad"></div>
+      </div>
 
+      <!-- AGENTS -->
+      <div class="agent ag-ig" id="ag-ig" style="left:110px;bottom:102px;" onclick="hireAgent('ig')">
+        <div class="bubble" id="bub-ig">Tap to hire me!</div>
+        <div class="a-head">📸</div>
+        <div class="a-body"></div>
+        <div class="hired-badge">HIRED ★</div>
+        <div class="a-lbl">DIJO-IG</div>
+      </div>
+      <div class="agent ag-tt" id="ag-tt" style="left:188px;bottom:102px;" onclick="hireAgent('tt')">
+        <div class="bubble" id="bub-tt">Tap to hire me!</div>
+        <div class="a-head">🎵</div>
+        <div class="a-body"></div>
+        <div class="hired-badge">HIRED ★</div>
+        <div class="a-lbl">DIJO-TT</div>
+      </div>
+      <div class="agent ag-yt" id="ag-yt" style="left:266px;bottom:102px;" onclick="hireAgent('yt')">
+        <div class="bubble" id="bub-yt">Tap to hire me!</div>
+        <div class="a-head">🎥</div>
+        <div class="a-body"></div>
+        <div class="hired-badge">HIRED ★</div>
+        <div class="a-lbl">DIJO-YT</div>
+      </div>
+      <div class="agent ag-li" id="ag-li" style="left:344px;bottom:102px;" onclick="hireAgent('li')">
+        <div class="bubble" id="bub-li">Tap to hire me!</div>
+        <div class="a-head">💼</div>
+        <div class="a-body"></div>
+        <div class="hired-badge">HIRED ★</div>
+        <div class="a-lbl">DIJO-LI</div>
+      </div>
 
-<div id="output"></div>
+      <!-- Performance overlay -->
+      <div class="perf-overlay" id="perf-overlay">
+        <div class="perf-hdr">
+          <div class="perf-lbl" id="perf-lbl">DIJO-IG · PERFORMING ON STAGE</div>
+          <button class="close-p" onclick="closePerf()">✕</button>
+        </div>
+        <div class="perf-script" id="perf-script"></div>
+        <div class="perf-action" id="perf-action"></div>
+      </div>
+    </div>
 
+    <!-- UI PANEL -->
+    <div class="ui-panel">
+      <div class="plat-tabs">
+        <div class="plat-tab p-ig on" id="tab-ig" onclick="switchPlat('ig')"><span class="pt-ico">📸</span>Instagram</div>
+        <div class="plat-tab p-tt" id="tab-tt" onclick="switchPlat('tt')"><span class="pt-ico">🎵</span>TikTok</div>
+        <div class="plat-tab p-yt" id="tab-yt" onclick="switchPlat('yt')"><span class="pt-ico">🎥</span>YouTube</div>
+        <div class="plat-tab p-li" id="tab-li" onclick="switchPlat('li')"><span class="pt-ico">💼</span>LinkedIn</div>
+      </div>
+      <div class="type-bar">
+        <div class="type-pill on" id="tp-caption" onclick="switchType('caption')">Caption & Hook</div>
+        <div class="type-pill" id="tp-script" onclick="switchType('script')">Act It Out 🎬</div>
+        <div class="type-pill" id="tp-hashtags" onclick="switchType('hashtags')">Hashtags</div>
+        <div class="type-pill" id="tp-schedule" onclick="switchType('schedule')">Post Schedule</div>
+        <div class="type-pill" id="tp-ideas" onclick="switchType('ideas')">Content Ideas</div>
+      </div>
+      <div class="brief-bar">
+        <div class="brief-lbl">BRIEF</div>
+        <input class="brief-inp" id="brief-inp" placeholder="Your brand, niche, or content topic..."/>
+        <button class="go-btn" id="go-btn" onclick="runAction()">ACTION ↗</button>
+      </div>
+      <div class="output" id="output">
+        <div class="empty">👆 Tap an agent on stage to hire them, pick a content type, write your brief — then hit ACTION.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-</div>
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-label">THE PROCESS</div>
+  <h2 class="section-title">HOW IT WORKS</h2>
+  <p class="section-sub">From brief to content in seconds.</p>
+  <div class="how-grid">
+    <div class="how-card"><div class="how-num">01</div><div class="how-title">Hire Your Agent</div><div class="how-sub">Pick DIJO-IG, TT, YT or LI — each platform has a specialist performer standing by.</div></div>
+    <div class="how-card"><div class="how-num">02</div><div class="how-title">Drop Your Brief</div><div class="how-sub">Tell the crew your brand, niche, or topic. No lengthy briefs — just a line is enough.</div></div>
+    <div class="how-card"><div class="how-num">03</div><div class="how-title">Watch Them Perform</div><div class="how-sub">Your agent steps on stage, uses the studio props, delivers the content live on camera.</div></div>
+    <div class="how-card"><div class="how-num">04</div><div class="how-title">Take the Content</div><div class="how-sub">Copy the caption, script, hashtags or schedule. Your crew is always ready for the next take.</div></div>
+  </div>
+</section>
 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">DIJO CREW</div>
+  <div class="footer-sub">Live AI acting crew for social media content creators.</div>
+</footer>
 
-<script src="script.js"></script>
+<script>
+// ── CONFIG ──
+// IMPORTANT: Replace with your actual Render server URL
+let SERVER_URL = localStorage.getItem('dijo_server') || 'https://YOUR-RENDER-URL.onrender.com';
+document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://','');
 
+function promptServerUrl() {
+  const url = prompt('Enter your Render server URL:', SERVER_URL);
+  if (url) {
+    SERVER_URL = url.trim().replace(/\/$/, '');
+    localStorage.setItem('dijo_server', SERVER_URL);
+    document.getElementById('server-url-display').textContent = SERVER_URL.replace('https://','');
+  }
+}
+
+// ── STATE ──
+let activePlat = 'ig';
+let activeType = 'caption';
+let hiredAgents = {};
+
+const platMap = {
+  ig: { name:'Instagram', agent:'DIJO-IG', emoji:'📸', cls:'p-ig' },
+  tt: { name:'TikTok',    agent:'DIJO-TT', emoji:'🎵', cls:'p-tt' },
+  yt: { name:'YouTube',   agent:'DIJO-YT', emoji:'🎥', cls:'p-yt' },
+  li: { name:'LinkedIn',  agent:'DIJO-LI', emoji:'💼', cls:'p-li' },
+};
+const typeMap = {
+  caption:'Caption & Hook', script:'Act It Out', hashtags:'Hashtags',
+  schedule:'Post Schedule', ideas:'Content Ideas'
+};
+const spotPos = { ig:'15%', tt:'30%', yt:'45%', li:'58%' };
+const homePosMap = {
+  ig:{left:'110px',bottom:'102px'},
+  tt:{left:'188px',bottom:'102px'},
+  yt:{left:'266px',bottom:'102px'},
+  li:{left:'344px',bottom:'102px'},
+};
+
+// ── SWITCH PLATFORM ──
+function switchPlat(p) {
+  activePlat = p;
+  Object.keys(platMap).forEach(k => {
+    const el = document.getElementById('tab-'+k);
+    el.className = 'plat-tab '+platMap[k].cls+(k===p?' on':'');
+  });
+  document.getElementById('spot').style.left = spotPos[p];
+  moveAgent(p, p==='script' ? 'camera' : 'center');
+  showBubble(p, ['Ready to create!','Lights on me!','Let\'s go!'][Math.floor(Math.random()*3)]);
+}
+
+// ── SWITCH TYPE ──
+function switchType(t) {
+  activeType = t;
+  Object.keys(typeMap).forEach(k => {
+    document.getElementById('tp-'+k).classList.toggle('on', k===t);
+  });
+}
+
+// ── HIRE AGENT ──
+function hireAgent(p) {
+  hiredAgents[p] = !hiredAgents[p];
+  document.getElementById('ag-'+p).classList.toggle('hired', hiredAgents[p]);
+  const msgs = {
+    ig:["I'm on the 'gram! 📸","Let's make reels!","Aesthetic content!"],
+    tt:["Going viral! 🎵","Hook in 3...2...1!","TikTok mode ON!"],
+    yt:["Camera rolling! 🎥","Watch time incoming!","Subscribe-worthy!"],
+    li:["Professional mode! 💼","Thought leader ON!","B2B content ready!"],
+  };
+  const msg = hiredAgents[p] ? msgs[p][Math.floor(Math.random()*3)] : 'Tap to hire me!';
+  showBubble(p, msg);
+  if(hiredAgents[p]) switchPlat(p);
+}
+
+// ── MOVE AGENT ──
+function moveAgent(p, spot) {
+  const el = document.getElementById('ag-'+p);
+  const positions = {
+    center:{left:'200px',bottom:'102px'},
+    camera:{left:'58px',bottom:'102px'},
+    mic:{left:'46px',bottom:'102px'},
+    laptop:{right:'80px',bottom:'126px',left:''},
+    home: homePosMap[p],
+  };
+  const pos = positions[spot] || homePosMap[p];
+  el.style.transition = 'all .5s cubic-bezier(.34,1.56,.64,1)';
+  el.style.left = pos.left !== undefined ? pos.left : '';
+  el.style.right = pos.right || '';
+  el.style.bottom = pos.bottom || '102px';
+}
+
+// ── SHOW BUBBLE ──
+function showBubble(p, msg) {
+  const el = document.getElementById('bub-'+p);
+  el.textContent = msg.length > 52 ? msg.slice(0,52)+'...' : msg;
+  el.classList.add('show');
+  clearTimeout(window['bt_'+p]);
+  window['bt_'+p] = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── PERFORMANCE OVERLAY ──
+function showPerf(p, script, action) {
+  document.getElementById('perf-lbl').textContent = platMap[p].agent + ' · PERFORMING ON STAGE';
+  document.getElementById('perf-script').textContent = script;
+  document.getElementById('perf-action').textContent = '🎬 ' + action;
+  document.getElementById('perf-overlay').classList.add('show');
+}
+function closePerf() {
+  document.getElementById('perf-overlay').classList.remove('show');
+  moveAgent(activePlat, 'home');
+}
+
+// ── MAIN ACTION ──
+async function runAction() {
+  const brief = document.getElementById('brief-inp').value.trim();
+  if (!brief) { document.getElementById('brief-inp').focus(); return; }
+
+  const btn = document.getElementById('go-btn');
+  const out = document.getElementById('output');
+  btn.disabled = true;
+  out.innerHTML = '<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+
+  const pc = platMap[activePlat];
+  moveAgent(activePlat, activeType === 'script' ? 'camera' : 'center');
+  showBubble(activePlat, 'Creating your '+typeMap[activeType]+'...');
+
+  try {
+    const res = await fetch(`${SERVER_URL}/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        brief,
+        agent: pc.agent,
+        contentType: activeType
+      })
+    });
+
+    if (!res.ok) throw new Error('Server error ' + res.status);
+    const data = await res.json();
+    const raw = data.text || '';
+
+    let html = `<div class="out-hdr"><div class="out-agent-chip">${pc.emoji} ${pc.agent}</div><div class="out-type-chip">${typeMap[activeType].toUpperCase()}</div></div>`;
+
+    if (activeType === 'caption' || activeType === 'script') {
+      html += `<div class="out-content">${raw}</div>`;
+      if (activeType === 'script') {
+        const dm = raw.match(/\[DELIVER\]([\s\S]*?)(?=\[|$)/);
+        const am = raw.match(/\[ACTION\]([\s\S]*?)(?=\[|$)/);
+        const deliver = dm ? dm[1].trim().slice(0,220) : raw.slice(0,220);
+        const action = am ? am[1].trim() : 'Takes a bow';
+        setTimeout(() => showPerf(activePlat, deliver, action), 500);
+      }
+    } else if (activeType === 'hashtags') {
+      const lines = raw.split('\n').filter(l => l.trim());
+      let grpHtml = '', group = '';
+      lines.forEach(l => {
+        if (/TRENDING|NICHE|BRANDED/i.test(l)) {
+          if (group) grpHtml += '</div></div>';
+          group = l.trim();
+          grpHtml += `<div class="out-section"><div class="out-stitle">${group}</div><div class="hash-cloud">`;
+        } else {
+          (l.match(/#\w+/g)||[]).forEach(t => {
+            grpHtml += `<span class="hash-tag ht-${activePlat}">${t}</span>`;
+          });
+        }
+      });
+      if (group) grpHtml += '</div></div>';
+      html += grpHtml || `<div class="out-content">${raw}</div>`;
+    } else if (activeType === 'schedule') {
+      let items;
+      try { items = JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch(e) { items = []; }
+      if (items.length) {
+        html += '<div class="sched-grid">';
+        items.forEach(d => {
+          html += `<div class="sched-day"><div class="sd-name">${d.day}</div><div class="sd-time">${d.time}</div><div class="sd-type">${d.type}</div></div>`;
+        });
+        html += '</div><div style="margin-top:12px;">';
+        items.forEach(d => { html += `<div class="sd-tip"><strong style="color:var(--amber)">${d.day}:</strong> ${d.tip}</div>`; });
+        html += '</div>';
+      } else { html += `<div class="out-content">${raw}</div>`; }
+    } else if (activeType === 'ideas') {
+      let items;
+      try { items = JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch(e) { items = []; }
+      if (items.length) {
+        html += '<div class="ideas-grid">';
+        items.forEach((it,i) => {
+          html += `<div class="idea-card"><div class="idea-num">IDEA ${i+1}</div><div class="idea-txt"><strong>${it.title}</strong><br/>${it.hook}</div><div class="idea-fmt">${it.format||''}</div></div>`;
+        });
+        html += '</div>';
+      } else { html += `<div class="out-content">${raw}</div>`; }
+    }
+
+    out.innerHTML = html;
+    showBubble(activePlat, 'Done! That\'s a wrap 🎬');
+  } catch(err) {
+    out.innerHTML = `<div style="color:#ff6666;font-size:12px;">⚠ Could not reach server at <strong>${SERVER_URL}</strong>. Check your Render URL above.</div>`;
+    console.error(err);
+  }
+
+  btn.disabled = false;
+  setTimeout(() => moveAgent(activePlat, 'home'), 4000);
+}
+</script>
 </body>
-
 </html>

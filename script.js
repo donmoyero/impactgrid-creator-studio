@@ -1,19 +1,15 @@
 // ─────────────────────────────────────────────
 // DIJO CREW v2 — script.js
-// Direct Gemini API call (no server needed)
+// Calls your Render server (API key stays safe)
 // ─────────────────────────────────────────────
 
-// ⚠ PASTE YOUR GEMINI API KEY HERE
-const GEMINI_API_KEY = 'AIzaSyAUtjbI7i0n5jJOXkbOQGcz7JhPkaa2Qkk';
-
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+const SERVER = 'https://dijo-ai.onrender.com';
 
 let activePlat  = 'ig';
 let activeCtype = 'ad';
 let isSpeaking  = false;
 let lastSpeech  = null;
 
-// ── CHARACTER CONFIG ──
 const CHARS = {
   ig: { name:'DIJO-IG', platform:'Instagram', color:'#E1306C', voice:{ pitch:1.2, rate:.95 } },
   tt: { name:'DIJO-TT', platform:'TikTok',    color:'#69C9D0', voice:{ pitch:1.4, rate:1.1 } },
@@ -53,38 +49,30 @@ const CTYPE_LABELS = {
 };
 
 // ─────────────────────────────────────────────
-// CALL GEMINI DIRECTLY FROM BROWSER
+// CALL YOUR RENDER SERVER
 // ─────────────────────────────────────────────
-async function callGemini(prompt) {
-  const res = await fetch(GEMINI_URL, {
+async function callServer(brief, agent, contentType) {
+  const res = await fetch(SERVER + '/generate', {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }]
-    })
+    body: JSON.stringify({ brief, agent, contentType })
   });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err?.error?.message || 'Gemini API error ' + res.status);
-  }
-
+  if (!res.ok) throw new Error('Server error ' + res.status);
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  return data.text || '';
 }
 
 // ─────────────────────────────────────────────
-// BUILD PROMPT
+// BUILD PROMPT (sent as brief to your server)
 // ─────────────────────────────────────────────
-function buildPrompt(charKey, ctype, script) {
-  const c = CHARS[charKey];
+function buildBrief(charKey, ctype, script) {
   const personalities = {
     ig: 'warm, aesthetic, aspirational — visual storytelling style',
     tt: 'fast, energetic, Gen-Z — hook in first 2 seconds, always punchy',
     yt: 'engaging, value-driven, clear — strong intros and satisfying payoffs',
     li: 'professional, insightful, authoritative — credibility with personality',
   };
-
+  const c = CHARS[charKey];
   return `You are ${c.name}, an animated ${c.platform} content creator performing LIVE in a professional studio.
 Your personality: ${personalities[charKey]}.
 Content type: ${CTYPE_LABELS[ctype]}.
@@ -177,7 +165,7 @@ function moveHome(c) {
 }
 
 // ─────────────────────────────────────────────
-// VOICE ENGINE — each agent has unique pitch/rate
+// VOICE ENGINE
 // ─────────────────────────────────────────────
 function speakText(text, charKey) {
   if (!text) return;
@@ -224,13 +212,6 @@ async function perform() {
   const script = document.getElementById('script-inp').value.trim();
   if (!script) { document.getElementById('script-inp').focus(); return; }
 
-  // Check API key
-  if (GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-    document.getElementById('out-area').innerHTML =
-      `<div class="err">⚠ Open <strong>script.js</strong> and replace <strong>YOUR_GEMINI_API_KEY_HERE</strong> with your actual key from <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#00D4FF">aistudio.google.com</a></div>`;
-    return;
-  }
-
   const btn = document.getElementById('perform-btn');
   const out = document.getElementById('out-area');
   btn.disabled = true;
@@ -243,7 +224,8 @@ async function perform() {
   document.getElementById('live-status').textContent = 'GENERATING';
 
   try {
-    const raw = await callGemini(buildPrompt(activePlat, activeCtype, script));
+    const brief = buildBrief(activePlat, activeCtype, script);
+    const raw   = await callServer(brief, CHARS[activePlat].name, 'script');
 
     const sceneM  = raw.match(/\[SCENE\]([\s\S]*?)(?=\[SCRIPT\]|\[ACTION\]|$)/);
     const scriptM = raw.match(/\[SCRIPT\]([\s\S]*?)(?=\[SCENE\]|\[ACTION\]|$)/);
@@ -276,7 +258,11 @@ async function perform() {
 
   } catch (err) {
     console.error('DIJO error:', err);
-    out.innerHTML = `<div class="err">⚠ ${err.message}<br/><small style="color:#444">Check your API key in script.js</small></div>`;
+    out.innerHTML = `<div class="err">
+      ⚠ Server is sleeping.<br/>
+      Open <strong>dijo-ai.onrender.com</strong> in a new tab, wait 30 seconds, then try again.<br/>
+      <small style="color:#444">${err.message}</small>
+    </div>`;
     moveHome(activePlat);
     document.getElementById('live-status').textContent = 'STANDBY';
   }

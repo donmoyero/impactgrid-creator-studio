@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────
-// DIJO CREW — script.js (LOCAL AI VERSION)
-// Works with Node server + Ollama
+// DIJO CREW — script.js (CLOUD AI VERSION)
+// Works with Vercel API
 // ─────────────────────────────────────────────
 
 const SERVER = "https://dijo-ai-server-7rkhykndc-donmoyeros-projects.vercel.app/api";
@@ -29,7 +29,7 @@ const CTYPE_LABELS={
 };
 
 // ─────────────────────────────────────────────
-// SERVER CALL
+// CALL CLOUD AI SERVER
 // ─────────────────────────────────────────────
 
 async function callServer(brief){
@@ -38,17 +38,19 @@ async function callServer(brief){
 
   try{
 
-   const res=await fetch(SERVER+"/generate",{
+   const res = await fetch(`${SERVER}/generate`,{
     method:"POST",
-    headers:{"Content-Type":"application/json"},
+    headers:{
+     "Content-Type":"application/json"
+    },
     body:JSON.stringify({brief})
    });
 
    if(!res.ok) throw new Error("Server error "+res.status);
 
-   const data=await res.json();
+   const data = await res.json();
 
-   return data.text;
+   return data.text || "";
 
   }catch(err){
 
@@ -65,7 +67,7 @@ async function callServer(brief){
 }
 
 // ─────────────────────────────────────────────
-// PROMPT BUILDER
+// BUILD AI PROMPT
 // ─────────────────────────────────────────────
 
 function buildBrief(charKey,ctype,script){
@@ -73,20 +75,20 @@ function buildBrief(charKey,ctype,script){
  const c=CHARS[charKey];
 
  return `
-You are ${c.name}, an animated ${c.platform} content creator performing on stage.
+You are ${c.name}, an animated ${c.platform} content creator performing live on a studio stage.
 
-Rewrite the user's idea into a short engaging ${CTYPE_LABELS[ctype]}.
+Rewrite the user's idea into an engaging ${CTYPE_LABELS[ctype]}.
 
-Return format exactly like this:
+Return exactly in this format:
 
 [SCENE]
-Describe what you do on stage.
+Describe your movement or action on stage.
 
 [SCRIPT]
 The spoken script.
 
 [ACTION]
-Closing gesture.
+The closing gesture.
 
 User idea:
 ${script}
@@ -108,7 +110,6 @@ function selectChar(c){
  });
 
  document.getElementById("beam1").style.left=SPOTPOS[c];
-
  document.getElementById("stage-label").textContent=CHARS[c].platform+" STUDIO";
 
 }
@@ -138,26 +139,20 @@ function speakText(text,charKey){
  window.speechSynthesis.cancel();
 
  const utt=new SpeechSynthesisUtterance(text);
-
  const v=CHARS[charKey].voice;
 
  utt.pitch=v.pitch;
  utt.rate=v.rate;
 
  isSpeaking=true;
-
  lastSpeech={text,charKey};
 
  document.getElementById("live-status").textContent="ON AIR";
 
  utt.onend=()=>{
-
   isSpeaking=false;
-
   document.getElementById("live-status").textContent="STANDBY";
-
   moveHome(charKey);
-
  };
 
  window.speechSynthesis.speak(utt);
@@ -180,7 +175,7 @@ function toggleVoice(){
 }
 
 // ─────────────────────────────────────────────
-// MOVE CHARACTER
+// CHARACTER MOVEMENT
 // ─────────────────────────────────────────────
 
 function moveChar(c,leftPx,bottomPx){
@@ -193,9 +188,7 @@ function moveChar(c,leftPx,bottomPx){
 }
 
 function moveHome(c){
-
  moveChar(c,HOME[c],105);
-
 }
 
 // ─────────────────────────────────────────────
@@ -254,7 +247,7 @@ async function perform(){
   out.innerHTML=`
   <div class="err">
   ⚠ AI server not reachable.<br>
-  Make sure Node server is running on port 3000.
+  Cloud AI service may be misconfigured or unavailable.
   </div>
   `;
 

@@ -1,9 +1,9 @@
 // ─────────────────────────────────────────────
 // DIJO CREW v2 — script.js
-// Calls your Render server (API key stays safe)
+// Local / Cloud AI Server
 // ─────────────────────────────────────────────
 
-const SERVER = 'https://dijo-ai.onrender.com';
+const SERVER = 'http://localhost:3000';
 
 let activePlat  = 'ig';
 let activeCtype = 'ad';
@@ -41,233 +41,197 @@ const BROLL = {
 };
 
 const CTYPE_LABELS = {
-  ad:           'Ad / Promo',
-  tutorial:     'Tutorial / How-to',
-  reaction:     'Reaction / Opinion',
-  announcement: 'Announcement',
-  story:        'Storytelling',
+  ad:'Ad / Promo',
+  tutorial:'Tutorial / How-to',
+  reaction:'Reaction / Opinion',
+  announcement:'Announcement',
+  story:'Storytelling',
 };
 
 // ─────────────────────────────────────────────
-// CALL YOUR RENDER SERVER
+// SERVER CALL WITH RETRY
 // ─────────────────────────────────────────────
 async function callServer(brief, agent, contentType) {
-  const res = await fetch(SERVER + '/generate', {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ brief, agent, contentType })
-  });
-  if (!res.ok) throw new Error('Server error ' + res.status);
-  const data = await res.json();
-  return data.text || '';
+
+  for(let attempt=1; attempt<=3; attempt++){
+
+    try{
+
+      const res = await fetch(SERVER + '/generate', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({brief,agent,contentType})
+      });
+
+      if(!res.ok) throw new Error("Server error "+res.status);
+
+      const data = await res.json();
+      return data.text || '';
+
+    }catch(err){
+
+      console.log("Server not ready, retrying...", attempt);
+
+      if(attempt === 3) throw err;
+
+      await new Promise(r=>setTimeout(r,3000));
+
+    }
+
+  }
+
 }
 
 // ─────────────────────────────────────────────
-// BUILD PROMPT (sent as brief to your server)
+// BUILD AI PROMPT
 // ─────────────────────────────────────────────
 function buildBrief(charKey, ctype, script) {
+
   const personalities = {
-    ig: 'warm, aesthetic, aspirational — visual storytelling style',
-    tt: 'fast, energetic, Gen-Z — hook in first 2 seconds, always punchy',
-    yt: 'engaging, value-driven, clear — strong intros and satisfying payoffs',
-    li: 'professional, insightful, authoritative — credibility with personality',
+    ig:'warm, aesthetic, aspirational — visual storytelling style',
+    tt:'fast, energetic, Gen-Z — hook in first 2 seconds',
+    yt:'engaging, value-driven, clear',
+    li:'professional, insightful, authoritative',
   };
+
   const c = CHARS[charKey];
-  return `You are ${c.name}, an animated ${c.platform} content creator performing LIVE in a professional studio.
-Your personality: ${personalities[charKey]}.
-Content type: ${CTYPE_LABELS[ctype]}.
 
-The user gave you this script or idea: "${script}"
+  return `You are ${c.name}, an animated ${c.platform} creator performing in a studio.
 
-Your job:
-1. Improve and rewrite it perfectly for ${c.platform} as a ${CTYPE_LABELS[ctype]}
-2. Make it punchy, natural, platform-perfect — under 100 words
-3. Return EXACTLY in this format, nothing else:
+User idea: "${script}"
 
-[SCENE] One physical action you do in the studio (walk to camera, pick up mic, point at green screen, open laptop, etc.)
-[SCRIPT] The improved spoken script — natural, ready to perform out loud
-[ACTION] One closing move or gesture to end the performance`;
+Rewrite it perfectly for ${c.platform}.
+
+Return EXACTLY in this format:
+
+[SCENE] action in studio
+[SCRIPT] spoken script
+[ACTION] closing gesture`;
 }
 
 // ─────────────────────────────────────────────
-// SELECT CHARACTER
+// CHARACTER SELECT
 // ─────────────────────────────────────────────
-function selectChar(c) {
-  activePlat = c;
-  ['ig','tt','yt','li'].forEach(k => {
-    document.getElementById('tab-'+k).className = 'ptab' + (k===c ? ' on-'+k : '');
-    document.getElementById('char-'+k).classList.toggle('active', k===c);
+function selectChar(c){
+
+  activePlat=c;
+
+  ['ig','tt','yt','li'].forEach(k=>{
+    document.getElementById('tab-'+k).className='ptab'+(k===c?' on-'+k:'');
+    document.getElementById('char-'+k).classList.toggle('active',k===c);
   });
-  document.getElementById('beam1').style.left = SPOTPOS[c];
-  setBackground(c, '');
-  document.getElementById('stage-label').textContent = STAGES[c].label;
-  document.getElementById('live-status').textContent = 'STANDBY';
-  showBubble(c, ['Ready! Give me a script!','Let\'s create!','On standby — go!'][Math.floor(Math.random()*3)]);
+
+  document.getElementById('beam1').style.left=SPOTPOS[c];
+  setBackground(c,'');
+  document.getElementById('stage-label').textContent=STAGES[c].label;
+  document.getElementById('live-status').textContent='STANDBY';
+
 }
 
 // ─────────────────────────────────────────────
-// SWITCH CONTENT TYPE
+// CONTENT TYPE
 // ─────────────────────────────────────────────
-function swType(t) {
-  activeCtype = t;
-  ['ad','tutorial','reaction','announcement','story'].forEach(k => {
-    document.getElementById('ct-'+k).classList.toggle('on', k===t);
+function swType(t){
+
+  activeCtype=t;
+
+  ['ad','tutorial','reaction','announcement','story'].forEach(k=>{
+    document.getElementById('ct-'+k).classList.toggle('on',k===t);
   });
+
 }
 
 // ─────────────────────────────────────────────
 // BACKGROUND
 // ─────────────────────────────────────────────
-function setBackground(plat, brief) {
-  let url = STAGES[plat].bg;
-  const topic = brief.toLowerCase();
-  for (const [kw, u] of Object.entries(BROLL)) {
-    if (topic.includes(kw)) { url = u; break; }
+function setBackground(plat,brief){
+
+  let url=STAGES[plat].bg;
+
+  const topic=brief.toLowerCase();
+
+  for(const [kw,u] of Object.entries(BROLL)){
+    if(topic.includes(kw)){url=u;break;}
   }
-  const el = document.getElementById('stage-bg');
-  el.style.backgroundImage = `url(${url})`;
+
+  const el=document.getElementById('stage-bg');
+  el.style.backgroundImage=`url(${url})`;
   el.classList.add('show');
+
 }
 
 // ─────────────────────────────────────────────
-// SPEECH BUBBLE
+// SPEECH ENGINE
 // ─────────────────────────────────────────────
-function showBubble(c, msg) {
-  const el = document.getElementById('bub-'+c);
-  el.textContent = msg.length > 55 ? msg.slice(0,55)+'...' : msg;
-  el.classList.add('show');
-  clearTimeout(window['bt_'+c]);
-  window['bt_'+c] = setTimeout(() => el.classList.remove('show'), 4000);
-}
+function speakText(text,charKey){
 
-// ─────────────────────────────────────────────
-// CAPTION BAR
-// ─────────────────────────────────────────────
-function showCaption(text) {
-  const el = document.getElementById('cap-bar');
-  el.textContent = text.slice(0,130) + (text.length > 130 ? '...' : '');
-  el.classList.add('show');
-}
-function hideCaption() {
-  document.getElementById('cap-bar').classList.remove('show');
-}
+  if(!text) return;
 
-// ─────────────────────────────────────────────
-// MOVE CHARACTER
-// ─────────────────────────────────────────────
-function moveChar(c, leftPx, bottomPx) {
-  const el = document.getElementById('char-'+c);
-  el.style.left   = leftPx;
-  el.style.bottom = (bottomPx || 105) + 'px';
-}
-function moveHome(c) {
-  moveChar(c, HOME[c], 105);
-}
-
-// ─────────────────────────────────────────────
-// VOICE ENGINE
-// ─────────────────────────────────────────────
-function speakText(text, charKey) {
-  if (!text) return;
   window.speechSynthesis.cancel();
-  const utt  = new SpeechSynthesisUtterance(text);
-  const v    = CHARS[charKey].voice;
-  utt.pitch  = v.pitch;
-  utt.rate   = v.rate;
-  utt.volume = 1;
-  isSpeaking = true;
-  lastSpeech = { text, charKey };
-  document.getElementById('voice-ind').classList.add('show');
-  document.getElementById('voice-btn').classList.add('on');
-  document.getElementById('live-status').textContent = 'ON AIR';
-  document.getElementById('char-'+charKey).classList.add('performing');
-  utt.onend = () => {
-    isSpeaking = false;
-    document.getElementById('voice-ind').classList.remove('show');
-    document.getElementById('voice-btn').classList.remove('on');
-    document.getElementById('live-status').textContent = 'STANDBY';
-    document.getElementById('char-'+charKey).classList.remove('performing');
-    setTimeout(() => moveHome(charKey), 600);
+
+  const utt=new SpeechSynthesisUtterance(text);
+
+  const v=CHARS[charKey].voice;
+
+  utt.pitch=v.pitch;
+  utt.rate=v.rate;
+
+  isSpeaking=true;
+  lastSpeech={text,charKey};
+
+  document.getElementById('live-status').textContent='ON AIR';
+
+  utt.onend=()=>{
+    isSpeaking=false;
+    document.getElementById('live-status').textContent='STANDBY';
+    moveHome(charKey);
   };
+
   window.speechSynthesis.speak(utt);
+
 }
 
-function toggleVoice() {
-  if (isSpeaking) {
-    window.speechSynthesis.cancel();
-    isSpeaking = false;
-    document.getElementById('voice-ind').classList.remove('show');
-    document.getElementById('voice-btn').classList.remove('on');
-    document.getElementById('live-status').textContent = 'STANDBY';
-    if (lastSpeech) document.getElementById('char-'+lastSpeech.charKey).classList.remove('performing');
-  } else if (lastSpeech) {
-    speakText(lastSpeech.text, lastSpeech.charKey);
+// ─────────────────────────────────────────────
+// PERFORM
+// ─────────────────────────────────────────────
+async function perform(){
+
+  const script=document.getElementById('script-inp').value.trim();
+
+  if(!script){
+    document.getElementById('script-inp').focus();
+    return;
   }
-}
 
-// ─────────────────────────────────────────────
-// MAIN PERFORM
-// ─────────────────────────────────────────────
-async function perform() {
-  const script = document.getElementById('script-inp').value.trim();
-  if (!script) { document.getElementById('script-inp').focus(); return; }
+  const out=document.getElementById('out-area');
 
-  const btn = document.getElementById('perform-btn');
-  const out = document.getElementById('out-area');
-  btn.disabled = true;
-  hideCaption();
-  out.innerHTML = '<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+  out.innerHTML='<div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
 
-  moveChar(activePlat, '155px', 110);
-  setBackground(activePlat, script);
-  showBubble(activePlat, 'AI is improving your script...');
-  document.getElementById('live-status').textContent = 'GENERATING';
+  try{
 
-  try {
-    const brief = buildBrief(activePlat, activeCtype, script);
-    const raw   = await callServer(brief, CHARS[activePlat].name, 'script');
+    const brief=buildBrief(activePlat,activeCtype,script);
 
-    const sceneM  = raw.match(/\[SCENE\]([\s\S]*?)(?=\[SCRIPT\]|\[ACTION\]|$)/);
-    const scriptM = raw.match(/\[SCRIPT\]([\s\S]*?)(?=\[SCENE\]|\[ACTION\]|$)/);
-    const actionM = raw.match(/\[ACTION\]([\s\S]*?)(?=\[SCENE\]|\[SCRIPT\]|$)/);
+    const raw=await callServer(brief,CHARS[activePlat].name,'script');
 
-    const scene  = sceneM  ? sceneM[1].trim()  : 'Walks to centre stage';
-    const spoken = scriptM ? scriptM[1].trim()  : raw.trim();
-    const action = actionM ? actionM[1].trim()  : 'Takes a bow';
+    const scriptM=raw.match(/\[SCRIPT\]([\s\S]*)/);
 
-    const c     = CHARS[activePlat];
-    const emoji = { ig:'📸', tt:'🎵', yt:'🎥', li:'💼' }[activePlat];
+    const spoken=scriptM?scriptM[1].trim():raw;
 
-    out.innerHTML = `
-      <div class="out-hdr">
-        <div class="out-chip chip-agent">${emoji} ${c.name}</div>
-        <div class="out-chip chip-type">${CTYPE_LABELS[activeCtype].toUpperCase()}</div>
-        <div class="out-chip chip-stage">${STAGES[activePlat].label}</div>
-      </div>
-      <div class="out-section-title">🎬 SCENE</div>
-      <div class="out-italic">${scene}</div>
-      <div class="out-section-title cyan">SCRIPT</div>
-      <div class="out-script">${spoken}</div>
-      <div class="out-section-title">✨ CLOSING ACTION</div>
-      <div class="out-italic">${action}</div>
-    `;
+    out.innerHTML=`<div class="out-script">${spoken}</div>`;
 
-    showCaption(spoken);
-    showBubble(activePlat, 'Lights! Camera! Action! 🎬');
-    setTimeout(() => speakText(spoken, activePlat), 500);
+    speakText(spoken,activePlat);
 
-  } catch (err) {
-    console.error('DIJO error:', err);
-    out.innerHTML = `<div class="err">
-      ⚠ Server is sleeping.<br/>
-      Open <strong>dijo-ai.onrender.com</strong> in a new tab, wait 30 seconds, then try again.<br/>
-      <small style="color:#444">${err.message}</small>
+  }catch(err){
+
+    console.error(err);
+
+    out.innerHTML=`<div class="err">
+    ⚠ AI server not reachable.<br>
+    Make sure your Node server is running.<br>
     </div>`;
-    moveHome(activePlat);
-    document.getElementById('live-status').textContent = 'STANDBY';
+
   }
 
-  btn.disabled = false;
 }
 
 // ── INIT ──

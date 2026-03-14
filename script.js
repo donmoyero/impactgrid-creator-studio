@@ -3,7 +3,7 @@
 // Works with Node server + Ollama
 // ─────────────────────────────────────────────
 
-const SERVER = "http://localhost:3000";
+const SERVER = "https://dijo-ai-server.vercel.app/api";
 
 let activePlat  = "ig";
 let activeCtype = "ad";
